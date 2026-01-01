@@ -8,6 +8,8 @@ A machine learning application that classifies news headlines into four categori
 
 Powered by **Flask**, **PyTorch**, and **Transformers** (BERT).
 
+![Sample Output](sample_output.png)
+
 ## Project Structure
 
 - `app.py`: Flask application server.
