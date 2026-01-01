@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News Classifier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-newspaper"></i> News Classifier</h1>
+            <p>Classify news headlines into categories using AI</p>
+        </header>
+
+        <main>
+            <section class="classifier-box">
+                <form action="/" method="POST">
+                    <div class="input-group">
+                        <label for="headline">Enter News Headline</label>
+                        <textarea name="headline" id="headline"
+                            placeholder="e.g. 'Apple releases new iPhone with revolutionary features...'"
+                            required>{{ prediction.headline if prediction else '' }}</textarea>
+                    </div>
+                    <button type="submit" class="analyze-btn">
+                        <i class="fa-solid fa-magnifying-glass"></i> Classify Text
+                    </button>
+                </form>
+            </section>
+
+            {% if prediction %}
+            <section class="results-section">
+                <h2>Classification Results</h2>
+                <div class="top-prediction">
+                    <span class="category-badge {{ prediction.preds[0][0].lower().replace('/', '-') }}">
+                        {{ prediction.preds[0][0] }}
+                    </span>
+                    <span class="confidence">{{ (prediction.preds[0][1] * 100)|round(1) }}% Confidence</span>
+                </div>
+
+                <div class="other-predictions">
+                    <h3>Other Possibilities</h3>
+                    <ul class="prediction-list">
+                        {% for label, prob in prediction.preds[1:] %}
+                        <li>
+                            <span class="label">{{ label }}</span>
+                            <div class="bar-container">
+                                <div class="bar" style="--bar-width: {{ prob * 100 }}%;"></div>
+                            </div>
+                            <span class="prob">{{ (prob * 100)|round(1) }}%</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            {% endif %}
+        </main>
+
+        <footer>
+            <p>Powered by PyTorch & Transformers • AG News Dataset</p>
+        </footer>
+    </div>
+</body>
+
+</html>
